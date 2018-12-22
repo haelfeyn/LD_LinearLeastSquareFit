@@ -1,19 +1,18 @@
-#pragma once
 #ifndef LEASTSQUAREFITCALCULATOR_H
 #define LEASTSQUAREFITCALCULATOR_H
 
-//class LeastSquareFitCalculator continues several functions and variables for
+//class LeastSquareFitCalculator contains several functions and variables for
 //calculating a line of best fit for any number of data points using summation method.
-//class was used in order to create an organized template of methods and procedures
+//class was used in order to create an organized framework of methods and procedures
 class LeastSquareFitCalculator
 {
 public:
 	LeastSquareFitCalculator(int, double*, double*);
-	double getYIntercept(void);
-	double getCorrelation_r(void);
-	double getSlope(void);
+	double getYIntercept() const;
+	double getCorrelation_r() const;
+	double getSlope() const;
 private:
-	int n;
+	int num;
 	double sumX, sumY,
 		sumXY,
 		sum_Xsquared, sum_Ysquared,	//these are the sums where each value must be squared
@@ -22,10 +21,9 @@ private:
 	double sumsCalculator(double*);
 	double powerSums(double*);
 	double dataCombiner(double*, double*);
-	void calcCorrelation_r(void);
-	void calcYIntercept(void);
-	void calcSlope(void);
+	double calcCorrelation_r();
+	double calcYIntercept();
+	double calcSlope();
 };
 
-#include "LeastSquareFitCalculator.cpp"
 #endif

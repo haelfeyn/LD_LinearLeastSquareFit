@@ -1,38 +1,32 @@
-#ifdef LEASTSQUAREFITCALCULATOR_H
 #include<cmath>
 #include "LeastSquareFitCalculator.h"
 
-//Constructor initializes all variables important for calculating slope, intercept, and regression
-LeastSquareFitCalculator::LeastSquareFitCalculator(int num, double* x, double* y)
-{
-	n = num;
-	sumX = sumsCalculator(x);
-	sumY = sumsCalculator(y);
-	sumXY = dataCombiner(x, y);
-	sum_Xsquared = powerSums(x);
-	sum_Ysquared = powerSums(y);
-	sumX_squared = pow(sumX, 2);
-	sumY_squared = pow(sumY, 2);
-
-	calcSlope();
-	calcYIntercept();
-	calcCorrelation_r();
-}
+//Constructor initializes all data members
+LeastSquareFitCalculator::LeastSquareFitCalculator(int n, double* x, double* y) :
+	num(n), sumX(sumsCalculator(x)), sumY(sumsCalculator(y)), sumXY(dataCombiner(x,y)),
+	sum_Xsquared(powerSums(x)), sum_Ysquared(powerSums(y))
+	{
+		sumX_squared = pow(sumX,2);
+		sumY_squared = pow(sumY,2);
+		m = calcSlope();
+		y_intercept = calcYIntercept();
+		correlation_r = calcCorrelation_r();
+	}
 
 //getYIntercept() returns the value for the line's y-intercept
-double LeastSquareFitCalculator::getYIntercept(void)
+double LeastSquareFitCalculator::getYIntercept() const
 {
 	return y_intercept;
 }
 
 //getCorrelation_r() returns the regression value for the data to the line
-double LeastSquareFitCalculator::getCorrelation_r(void)
+double LeastSquareFitCalculator::getCorrelation_r() const
 {
 	return correlation_r;
 }
 
 //getSlope() returns the slope of the new line
-double LeastSquareFitCalculator::getSlope(void)
+double LeastSquareFitCalculator::getSlope() const
 {
 	return m;
 }
@@ -41,8 +35,8 @@ double LeastSquareFitCalculator::getSlope(void)
 double LeastSquareFitCalculator::dataCombiner(double* x, double* y)
 {
 	double result = 0.0;
-	for (int i = 0;i <= n;i++)
-		result += (x[i] * y[i]);
+	for (int i = 0; i < num; ++i)
+		result += x[i] * y[i];
 	return result;
 }
 
@@ -50,7 +44,7 @@ double LeastSquareFitCalculator::dataCombiner(double* x, double* y)
 double LeastSquareFitCalculator::sumsCalculator(double* data)
 {
 	double result = 0.0;
-	for (int i = 0; i < n; i++)
+	for (int i = 0; i < num; ++i)
 		result += data[i];
 	return result;
 }
@@ -59,37 +53,33 @@ double LeastSquareFitCalculator::sumsCalculator(double* data)
 //before being added to the sum
 double LeastSquareFitCalculator::powerSums(double* data)
 {
-	double result=0.0;
-	for (int i = 0; i < n; i++)
+	double result = 0.0;
+	for (int i = 0; i < num; ++i)
 		result += pow(data[i], 2);
 	return result;
 }
 
 //calcCorrelation_r() calculates the regression value r
-void LeastSquareFitCalculator::calcCorrelation_r(void)
+double LeastSquareFitCalculator::calcCorrelation_r()
 {
-	double numerator, denominator;
+	double numerator = num*sumXY - sumX*sumY,
+	       denominator = sqrt(abs(num*sum_Xsquared - sumX_squared))*
+							sqrt(abs(num*sum_Ysquared - sumY_squared));
 
-	numerator = n*sumXY - sumX*sumY;
-	denominator = sqrt(abs(n*sum_Xsquared - sumX_squared))*sqrt(abs(n*sum_Ysquared - sumY_squared));
-
-	correlation_r = numerator / denominator;
+	return numerator / denominator;
 }
 
 //calcYIntercept() calculates the y-intercept
-void LeastSquareFitCalculator::calcYIntercept(void)
+double LeastSquareFitCalculator::calcYIntercept()
 {
-	y_intercept = (sumY - m*sumX) / n;
+	return (sumY - m*sumX) / num;
 }
 
 //calcSlope() calculates the slope
-void LeastSquareFitCalculator::calcSlope(void)
+double LeastSquareFitCalculator::calcSlope()
 {
-	double numerator, denominator;
+	double numerator = num*sumXY - sumX*sumY,
+	       denominator = num*sum_Xsquared - sumX_squared;
 
-	numerator = n*sumXY - sumX*sumY;
-	denominator = n*sum_Xsquared - sumX_squared;
-
-	m = numerator / denominator;
+	return numerator / denominator;
 }
-#endif
