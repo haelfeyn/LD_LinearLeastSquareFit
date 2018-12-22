@@ -5,5 +5,5 @@ The user is then prompted to enter how many data points they have (this must be 
 Data is retrieved from the user in the form of x coordinates first, then y coordinates.
 Data is not validated yet. This will be fixed in the future.
 I used a class for the calculations because it's more easily organized and reusable.
-I also used dynamic memory allocation even though vectors would have been easier to work with as a practice for myself.
-This program has been tested in Visual Studio 2015 and found functional.
+I also used dynamic memory allocation instead of vectors so as not to deal with resizing.
+This program has been tested in Visual Studio 2017 and found functional.
